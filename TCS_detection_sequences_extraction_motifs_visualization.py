@@ -37,18 +37,21 @@ print('Variables to be defined:')
 PWD="C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\TopA_ChIP-Seq\EcTopoI_G116S_M320V_Topo-Seq\\"
 
 #Input data - WIG.
-path_to_wig_files={'TopoI_Ara': {'F' : PWD + "WIG_NE_strand_specific_masked_FE_smoothed_av\TopoI_Ara_F_N3E_FE_av_123.wig",    'R' : PWD + "WIG_NE_strand_specific_masked_FE_smoothed_av\TopoI_Ara_R_N3E_FE_av_123.wig"},
-                   'TopoI':     {'F' : PWD + "WIG_NE_strand_specific_masked_FE_smoothed_av\TopoI_no_Ara_F_N3E_FE_av_123.wig", 'R' : PWD + "WIG_NE_strand_specific_masked_FE_smoothed_av\TopoI_no_Ara_R_N3E_FE_av_123.wig"}}
+path_to_wig_files_1={'TopoI_Ara': {'F' : PWD + "WIG_NE_strand_specific_masked_FE_smoothed_av\TopoI_Ara_F_N3E_FE_av_123.wig",    'R' : PWD + "WIG_NE_strand_specific_masked_FE_smoothed_av\TopoI_Ara_R_N3E_FE_av_123.wig"},
+                     'TopoI':     {'F' : PWD + "WIG_NE_strand_specific_masked_FE_smoothed_av\TopoI_no_Ara_F_N3E_FE_av_123.wig", 'R' : PWD + "WIG_NE_strand_specific_masked_FE_smoothed_av\TopoI_no_Ara_R_N3E_FE_av_123.wig"}}
 
-path_to_wig_files_1={'TopoI_Ara_IP':      {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_14_S14_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_14_S14_edt_N3E_R.wig"},
+path_to_wig_files_2={'TopoI_Ara': {'F' : PWD + "WIG_NE_strand_specific_masked_scaled_av_masked_accB_subtract_mock\TopoI_Ara_N3E_F_masked_scaled_av_123_mock_subtr.wig",    'R' : PWD + "WIG_NE_strand_specific_masked_scaled_av_masked_accB_subtract_mock\TopoI_Ara_N3E_R_masked_scaled_av_123_mock_subtr.wig"},
+                     'TopoI':     {'F' : PWD + "WIG_NE_strand_specific_masked_scaled_av_masked_accB_subtract_mock\TopoI_N3E_F_masked_scaled_av_123_mock_subtr.wig", 'R' : PWD + "WIG_NE_strand_specific_masked_scaled_av_masked_accB_subtract_mock\TopoI_N3E_R_masked_scaled_av_123_mock_subtr.wig"}}
+
+path_to_wig_files_R1={'TopoI_Ara_IP':      {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_14_S14_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_14_S14_edt_N3E_R.wig"},
                      'TopoI_Ara_mock':    {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_13_S13_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_13_S13_edt_N3E_R.wig"},
                      'TopoI_no_Ara_IP':   {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_16_S16_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_16_S16_edt_N3E_R.wig"},
                      'TopoI_no_Ara_mock': {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_15_S15_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_15_S15_edt_N3E_R.wig"}}
-path_to_wig_files_2={'TopoI_Ara_IP':      {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_18_S18_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_18_S18_edt_N3E_R.wig"},
+path_to_wig_files_R2={'TopoI_Ara_IP':      {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_18_S18_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_18_S18_edt_N3E_R.wig"},
                      'TopoI_Ara_mock':    {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_17_S17_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_17_S17_edt_N3E_R.wig"},
                      'TopoI_no_Ara_IP':   {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_20_S20_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_20_S20_edt_N3E_R.wig"},
                      'TopoI_no_Ara_mock': {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_19_S19_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_19_S19_edt_N3E_R.wig"}}
-path_to_wig_files_3={'TopoI_Ara_IP':      {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_22_S22_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_22_S22_edt_N3E_R.wig"},
+path_to_wig_files_R3={'TopoI_Ara_IP':      {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_22_S22_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_22_S22_edt_N3E_R.wig"},
                      'TopoI_Ara_mock':    {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_21_S21_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_21_S21_edt_N3E_R.wig"},
                      'TopoI_no_Ara_IP':   {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_24_S24_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_24_S24_edt_N3E_R.wig"},
                      'TopoI_no_Ara_mock': {'F' : PWD + "WIG_NE_strand_specific_masked\DSu_23_S23_edt_N3E_F.wig", 'R' : PWD + "WIG_NE_strand_specific_masked\DSu_23_S23_edt_N3E_R.wig"}}
@@ -56,7 +59,7 @@ path_to_wig_files_3={'TopoI_Ara_IP':      {'F' : PWD + "WIG_NE_strand_specific_m
 
 
 #Path to the genome FASTA.
-Genome_path="C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\TopA_ChIP-Seq\EcTopoI_G116S_M320V_Topo-Seq\Scripts_TopoI_Topo-seq\Additional_genome_features\E_coli_w3110_G_Mu.fasta"
+Genome_path="C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\TopA_ChIP-Seq\EcTopoI_G116S_M320V_Topo-Seq\Scripts_TopoI_Topo-seq\TopoI_Topo-Seq\Additional_genome_features\E_coli_w3110_G_Mu.fasta"
 
 #Signal threshold.
 Threshold=10
@@ -65,7 +68,7 @@ Threshold=10
 Genome_ID='NC_007779.1_w3110_Mu'
 
 #Path for the output.
-Output_path=PWD + "TCS_motifs\\Replics_123_av_Thresholds\\"
+Output_path=f'{PWD}TCS_motifs\\TEST_Replics_123_av_sub_mock_Thresholds_{Threshold}\\'
 if not os.path.exists(Output_path):
         os.makedirs(Output_path)
 
@@ -200,7 +203,6 @@ def RC_merge_R(F_sequences_dict, R_sequences_dict, filepath_full_len):
 def dict_to_list(indict):
         
         outlist=[]
-        
         for name, data in indict.items():
                 outlist.append(data)
         
@@ -475,7 +477,7 @@ def wrap_function(dict_of_wigs_path, genome_input_path, threshold, Genome_ID, ou
                 
         return
 
-wrap_function(path_to_wig_files, Genome_path, Threshold, Genome_ID, Output_path)
+wrap_function(path_to_wig_files_2, Genome_path, Threshold, Genome_ID, Output_path)
 
 
 
@@ -818,7 +820,6 @@ def wrap_function_Threshold(dict_of_wigs_path, del_path, fname, genome_input_pat
         #-Ara tracks.
         TCSs_no_Ara_F, TCSs_no_Ara_metasignal_F=detect_TCSs(Prepared_tracks_F[1], threshold, win_range_local_F)
         TCSs_no_Ara_R, TCSs_no_Ara_metasignal_R=detect_TCSs(Prepared_tracks_R[1], threshold, win_range_local_R)        
-        
         
         #Cleavage signal in the vicinity of TCSs.
         TCSs_Ara_metasignal_F_R_rc=TCSs_Ara_metasignal_F+np.array(TCSs_Ara_metasignal_R.tolist()[::-1])

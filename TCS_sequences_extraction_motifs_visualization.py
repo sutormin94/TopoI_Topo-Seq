@@ -49,13 +49,13 @@ All_TCSs_path="C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChI
 Unique_TCSs_path="C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\Data_analysis\EcTopoI_ChIP_Seq_vs_Topo_Seq\\EcTopoI_ChIP_shared_with_EcTopoI_Topo.narrowPeak"
 
 #Path to the genome FASTA.
-Genome_path="C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\TopA_ChIP-Seq\EcTopoI_G116S_M320V_Topo-Seq\Scripts_TopoI_Topo-seq\Additional_genome_features\E_coli_w3110_G_Mu.fasta"
+Genome_path="C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\TopA_ChIP-Seq\EcTopoI_G116S_M320V_Topo-Seq\Scripts_TopoI_Topo-seq\TopoI_Topo-Seq\Additional_genome_features\E_coli_w3110_G_Mu.fasta"
 
 #Genome ID.
 Genome_ID='NC_007779.1_w3110_Mu'
 
 #Path for the output.
-Output_path="C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\Data_analysis\EcTopoI_ChIP_Seq_vs_Topo_Seq\\Shared_TCSs_signal_motif\\"
+Output_path="C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\Data_analysis\EcTopoI_ChIP_Seq_vs_Topo_Seq\\TEST_Shared_TCSs_signal_motif\\"
 if not os.path.exists(Output_path):
     os.makedirs(Output_path)
     
