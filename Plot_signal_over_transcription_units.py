@@ -17,6 +17,7 @@ import numpy as np
 import scipy
 import scipy.cluster.hierarchy as sch
 from scipy import stats
+from scipy.interpolate import CubicSpline
 from Bio import SeqIO
 from Bio.SeqUtils import GC as GC_count
 import matplotlib.patheffects as PathEffects
@@ -29,9 +30,9 @@ from pandas import DataFrame
 
 
 #Path to the working directory.
-PWD='C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\TopA_ChIP-Seq\EcTopoI_G116S_M320V_Topo-Seq\Metagene_analysis\Transcripts_strand_specific\\'
+PWD='C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\TopA_ChIP-Seq\EcTopoI_G116S_M320V_Topo-Seq\Metagene_analysis\Transcripts_strand_specific_binned_stat_for_Fig_5\\'
 #Name of the signal to plotted (protein or smth.).
-Signal_name='ChIP_Topo_Seq_strand_specific'
+Signal_name='EcTopoI_Topo_Seq_strand_specific'
 #Half-window width will be used to smooth signal.
 Sm_window=500
 #Bin width.
@@ -78,6 +79,20 @@ Wig_drip_data_in_dict_transcripts_3={'Topo_I_N3E_ss_F_by_FE All TUs' :  PWD + '\
                                      'All TUs CTD-Rif-' : 'C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\Signal_over_TUs\Representative_transcripts\Signal_of_TUs_wig\All_TUs_no_dps_1660\Signal_Sutormin_TopA_CTD_minus_Rif_minus_av_346_over_All_TUs_no_dps_1660_width_15000bp_gb_5000bp.wig'
                                      } 
 
+Fig5_toposeq_data_binned_in_dict_transcripts={'Topo_I_FE_ss_F All TUs'  : PWD + '\Signal_of_TUs_wig\All_TUs_no_dps_1660\Mean_signal_TopoI_Ara_N3E_subtr_mock_subtr_no_Ara_over_All_TUs_no_dps_1660_width_15000bp_gb_5000bp_bin_width_200bp_F.wig',
+                                              'Topo_I_STD_ss_F All TUs' : PWD + '\Signal_of_TUs_wig\All_TUs_no_dps_1660\STD_signal_TopoI_Ara_N3E_subtr_mock_subtr_no_Ara_over_All_TUs_no_dps_1660_width_15000bp_gb_5000bp_bin_width_200bp_F.wig',
+                                              'Topo_I_FE_ss_R All TUs'  : PWD + '\Signal_of_TUs_wig\All_TUs_no_dps_1660\Mean_signal_TopoI_Ara_N3E_subtr_mock_subtr_no_Ara_over_All_TUs_no_dps_1660_width_15000bp_gb_5000bp_bin_width_200bp_R.wig',
+                                              'Topo_I_STD_ss_R All TUs' : PWD + '\Signal_of_TUs_wig\All_TUs_no_dps_1660\STD_signal_TopoI_Ara_N3E_subtr_mock_subtr_no_Ara_over_All_TUs_no_dps_1660_width_15000bp_gb_5000bp_bin_width_200bp_R.wig',
+                                              'Topo_I_FE_ss_F HETU'     : PWD + '\Signal_of_TUs_wig\HETU_no_dps_rfa_200\Mean_signal_TopoI_Ara_N3E_subtr_mock_subtr_no_Ara_over_HETU_no_dps_rfa_200_width_15000bp_gb_5000bp_bin_width_200bp_F.wig',
+                                              'Topo_I_STD_ss_F HETU'    : PWD + '\Signal_of_TUs_wig\HETU_no_dps_rfa_200\STD_signal_TopoI_Ara_N3E_subtr_mock_subtr_no_Ara_over_HETU_no_dps_rfa_200_width_15000bp_gb_5000bp_bin_width_200bp_F.wig',
+                                              'Topo_I_FE_ss_R HETU'     : PWD + '\Signal_of_TUs_wig\HETU_no_dps_rfa_200\Mean_signal_TopoI_Ara_N3E_subtr_mock_subtr_no_Ara_over_HETU_no_dps_rfa_200_width_15000bp_gb_5000bp_bin_width_200bp_R.wig',
+                                              'Topo_I_STD_ss_R HETU'    : PWD + '\Signal_of_TUs_wig\HETU_no_dps_rfa_200\STD_signal_TopoI_Ara_N3E_subtr_mock_subtr_no_Ara_over_HETU_no_dps_rfa_200_width_15000bp_gb_5000bp_bin_width_200bp_R.wig',
+                                              'Topo_I_FE_ss_F LETU'     : PWD + '\Signal_of_TUs_wig\LETU_no_dps_200\Mean_signal_TopoI_Ara_N3E_subtr_mock_subtr_no_Ara_over_LETU_no_dps_200_width_15000bp_gb_5000bp_bin_width_200bp_F.wig',
+                                              'Topo_I_STD_ss_F LETU'    : PWD + '\Signal_of_TUs_wig\LETU_no_dps_200\STD_signal_TopoI_Ara_N3E_subtr_mock_subtr_no_Ara_over_LETU_no_dps_200_width_15000bp_gb_5000bp_bin_width_200bp_F.wig',
+                                              'Topo_I_FE_ss_R LETU'     : PWD + '\Signal_of_TUs_wig\LETU_no_dps_200\Mean_signal_TopoI_Ara_N3E_subtr_mock_subtr_no_Ara_over_LETU_no_dps_200_width_15000bp_gb_5000bp_bin_width_200bp_R.wig',
+                                              'Topo_I_STD_ss_R LETU'    : PWD + '\Signal_of_TUs_wig\LETU_no_dps_200\STD_signal_TopoI_Ara_N3E_subtr_mock_subtr_no_Ara_over_LETU_no_dps_200_width_15000bp_gb_5000bp_bin_width_200bp_R.wig',
+                                              }
+
 #Set type to choose plotting parameters: genes, operons or transcripts.
 Set_type="transcripts"
 
@@ -109,11 +124,13 @@ def wig_FE_over_genes_parsing(wigfile):
             ww_l=line[2].split('=')[1].rstrip('"').lstrip('"').split('_')
             win_width=int(ww_l[0])
             length=int(ww_l[1])
+            if len(ww_l)==3:
+                bin_width=int(ww_l[2])
         if line[0] not in ['track', 'fixedStep']:
             NE_values.append(float(line[0]))
     wigin.close()
     print(win_width, length)
-    return NE_values, win_width, length
+    return [NE_values, win_width, length, bin_width]
 
 #######
 #Returns smoothed tracks.
@@ -150,7 +167,7 @@ def Binning(ends, bin_width):
 #######
 
 
-def plot_FE_all_expression_gg_Rif_no_Rif(wig_in_dict, sm_window, bin_width, output_path, set_name, set_type):
+def plot_N3E_raw_signal(wig_in_dict, sm_window, bin_width, output_path, set_name, set_type):
     #Number of genes within sets.
     TU_sets_v={'All genes' : 4119, 'HEG 270' : 269, 'LEG 270' : 270, 'HEG 370' : 369, 'LEG 370' : 370,
                'All operons' : 2327, 'HEO 144' : 143, 'LEO 144' : 144, 'HEO 186' : 185, 'LEO 186' : 186, 'LAO 27' : 27, 'SAO 27' : 27, 'rRNA_operons' : 7, 
@@ -956,12 +973,216 @@ def plot_FE_all_expression_gg_Rif_no_Rif(wig_in_dict, sm_window, bin_width, outp
     
     return
 
-#EcTopoI
-#plot_FE_all_expression_gg_Rif_no_Rif(Wig_data_in_dict_transcripts, Sm_window, Out_path, Signal_name, Set_type)
-#RNA-pol
-#plot_FE_all_expression_gg_Rif_no_Rif(Wig_data_in_dict_transcripts_RNApol, Sm_window, Out_path, Signal_name, Set_type)
 
-#DRIP-Seq.
-#plot_FE_all_expression_gg_Rif_no_Rif(Wig_data_in_dict_operons, Sm_window, Out_path, Signal_name, 'operons')
-#plot_FE_all_expression_gg_Rif_no_Rif(Wig_data_in_dict_genes, Sm_window, Out_path, Signal_name, 'genes')
-plot_FE_all_expression_gg_Rif_no_Rif(Wig_drip_data_in_dict_transcripts_2, Sm_window, Bin_width, Out_path, Signal_name, 'transcripts')
+
+
+###############
+### Plot several tracks together when the metagene signal is already binned.
+### Tries binned signal and spline interpolation of the signal.
+###############
+
+def plot_N3E_binned_signal(wig_in_dict, output_path, set_name, set_type):
+    #Number of genes within sets.
+    TU_sets_v={'Topo_I_FE_ss_F All TUs' : 1660, 'Topo_I_FE_ss_R All TUs' : 1660, 
+               'Topo_I_FE_ss_F HETU'    : 200,  'Topo_I_FE_ss_R HETU'    : 200,
+               'Topo_I_FE_ss_F LETU'    : 200,  'Topo_I_FE_ss_R LETU'    : 200,
+               }    
+    
+
+    #FE averaged WIG parsing
+    dict_of_wigs={}
+    win_width=15000
+    length=5000
+    for name, file in wig_in_dict.items():
+        print(name, file)
+        data=wig_FE_over_genes_parsing(file)
+        win_width=data[1]
+        length=data[2]
+        bin_width=data[3]
+        dict_of_wigs[name]=data[0]        
+    positions=np.arange(-win_width, win_width+length, bin_width)    
+    print(win_width, length, bin_width)         
+    
+    #Plot FE over genes.
+    plt.figure(figsize=(6, 6), dpi=100) #Def size - 10, 6; Closer look - 3, 6
+    plot1=plt.subplot(111)
+    ##Transcription units below.
+    if set_type=="transcripts":
+        #Standard order of colors: #757d8b, #333738, #b08642, #e4d1b4.
+        #TopoI Topo-Seq data.
+        Upper_conf_interval_F_all_TUs=np.array(dict_of_wigs['Topo_I_FE_ss_F All TUs'])+(np.array(dict_of_wigs['Topo_I_STD_ss_F All TUs'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_F All TUs"]))
+        Lower_conf_interval_F_all_TUs=np.array(dict_of_wigs['Topo_I_FE_ss_F All TUs'])-(np.array(dict_of_wigs['Topo_I_STD_ss_F All TUs'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_F All TUs"]))        
+        plot1.plot(positions, dict_of_wigs['Topo_I_FE_ss_F All TUs'], linestyle='-',  color='#333738', linewidth=2.5, alpha=0.7, label=f'All TUs F ({TU_sets_v["Topo_I_FE_ss_F All TUs"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0   
+        #plot1.plot(positions,  Upper_conf_interval_F_all_TUs,  linestyle='-', color='#333738', linewidth=0.2, alpha=0.3)
+        #plot1.plot(positions,  Lower_conf_interval_F_all_TUs,  linestyle='-', color='#333738', linewidth=0.2, alpha=0.3)
+        #plot1.fill_between(positions, Lower_conf_interval_F_all_TUs, Upper_conf_interval_F_all_TUs, facecolor='#333738', alpha=0.2, interpolate=True) 
+        
+        Upper_conf_interval_R_all_TUs=np.array(dict_of_wigs['Topo_I_FE_ss_R All TUs'])+(np.array(dict_of_wigs['Topo_I_STD_ss_R All TUs'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_R All TUs"]))
+        Lower_conf_interval_R_all_TUs=np.array(dict_of_wigs['Topo_I_FE_ss_R All TUs'])-(np.array(dict_of_wigs['Topo_I_STD_ss_R All TUs'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_R All TUs"]))                
+        plot1.plot(positions, dict_of_wigs['Topo_I_FE_ss_R All TUs'], linestyle='--', color='#333738', linewidth=2.5, alpha=0.7, label=f'All TUs R ({TU_sets_v["Topo_I_FE_ss_R All TUs"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0        
+        #plot1.plot(positions,  Upper_conf_interval_R_all_TUs,  linestyle='-', color='#333738', linewidth=0.2, alpha=0.3)
+        #plot1.plot(positions,  Lower_conf_interval_R_all_TUs,  linestyle='-', color='#333738', linewidth=0.2, alpha=0.3)
+        #plot1.fill_between(positions, Lower_conf_interval_R_all_TUs, Upper_conf_interval_R_all_TUs, facecolor='#333738', alpha=0.2, interpolate=True) 
+        
+        Upper_conf_interval_F_HETU=np.array(dict_of_wigs['Topo_I_FE_ss_F HETU'])+(np.array(dict_of_wigs['Topo_I_STD_ss_F HETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_F HETU"]))
+        Lower_conf_interval_F_HETU=np.array(dict_of_wigs['Topo_I_FE_ss_F HETU'])-(np.array(dict_of_wigs['Topo_I_STD_ss_F HETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_F HETU"]))                
+        plot1.plot(positions, dict_of_wigs['Topo_I_FE_ss_F HETU'],    linestyle='-',  color='#757d8b', linewidth=2.5, alpha=0.7, label=f'HETU F ({TU_sets_v["Topo_I_FE_ss_F HETU"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0   
+        #plot1.plot(positions,  Upper_conf_interval_F_HETU,  linestyle='-', color='#757d8b', linewidth=0.2, alpha=0.3)
+        #plot1.plot(positions,  Lower_conf_interval_F_HETU,  linestyle='-', color='#757d8b', linewidth=0.2, alpha=0.3)
+        #plot1.fill_between(positions, Lower_conf_interval_F_HETU, Upper_conf_interval_F_HETU, facecolor='#757d8b', alpha=0.2, interpolate=True) 
+        
+        Upper_conf_interval_R_HETU=np.array(dict_of_wigs['Topo_I_FE_ss_R HETU'])+(np.array(dict_of_wigs['Topo_I_STD_ss_R HETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_R HETU"]))
+        Lower_conf_interval_R_HETU=np.array(dict_of_wigs['Topo_I_FE_ss_R HETU'])-(np.array(dict_of_wigs['Topo_I_STD_ss_R HETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_R HETU"]))                        
+        plot1.plot(positions, dict_of_wigs['Topo_I_FE_ss_R HETU'],    linestyle='--', color='#757d8b', linewidth=2.5, alpha=0.7, label=f'HETU R ({TU_sets_v["Topo_I_FE_ss_R HETU"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0  
+        #plot1.plot(positions,  Upper_conf_interval_R_HETU,  linestyle='-', color='#757d8b', linewidth=0.2, alpha=0.3)
+        #plot1.plot(positions,  Lower_conf_interval_R_HETU,  linestyle='-', color='#757d8b', linewidth=0.2, alpha=0.3)
+        #plot1.fill_between(positions, Lower_conf_interval_R_HETU, Upper_conf_interval_R_HETU, facecolor='#757d8b', alpha=0.2, interpolate=True) 
+        
+        Upper_conf_interval_F_LETU=np.array(dict_of_wigs['Topo_I_FE_ss_F LETU'])+(np.array(dict_of_wigs['Topo_I_STD_ss_F LETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_F LETU"]))
+        Lower_conf_interval_F_LETU=np.array(dict_of_wigs['Topo_I_FE_ss_F LETU'])-(np.array(dict_of_wigs['Topo_I_STD_ss_F LETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_F LETU"]))                
+        plot1.plot(positions, dict_of_wigs['Topo_I_FE_ss_F LETU'],    linestyle='-',  color='#e4d1b4', linewidth=2.5, alpha=0.7, label=f'LETU F ({TU_sets_v["Topo_I_FE_ss_F LETU"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0   
+        #plot1.plot(positions,  Upper_conf_interval_F_LETU,  linestyle='-', color='#e4d1b4', linewidth=0.2, alpha=0.3)
+        #plot1.plot(positions,  Lower_conf_interval_F_LETU,  linestyle='-', color='#e4d1b4', linewidth=0.2, alpha=0.3)
+        #plot1.fill_between(positions, Lower_conf_interval_F_LETU, Upper_conf_interval_F_LETU, facecolor='#e4d1b4', alpha=0.2, interpolate=True) 
+        
+        Upper_conf_interval_R_LETU=np.array(dict_of_wigs['Topo_I_FE_ss_R LETU'])+(np.array(dict_of_wigs['Topo_I_STD_ss_R LETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_R LETU"]))
+        Lower_conf_interval_R_LETU=np.array(dict_of_wigs['Topo_I_FE_ss_R LETU'])-(np.array(dict_of_wigs['Topo_I_STD_ss_R LETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_R LETU"]))                        
+        plot1.plot(positions, dict_of_wigs['Topo_I_FE_ss_R LETU'],    linestyle='--', color='#e4d1b4', linewidth=2.5, alpha=0.7, label=f'LETU R ({TU_sets_v["Topo_I_FE_ss_R LETU"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0  
+        #plot1.plot(positions,  Upper_conf_interval_R_LETU,  linestyle='-', color='#e4d1b4', linewidth=0.2, alpha=0.3)
+        #plot1.plot(positions,  Lower_conf_interval_R_LETU,  linestyle='-', color='#e4d1b4', linewidth=0.2, alpha=0.3)
+        #plot1.fill_between(positions, Lower_conf_interval_R_LETU, Upper_conf_interval_R_LETU, facecolor='#e4d1b4', alpha=0.2, interpolate=True) 
+        
+        #plot1.plot(positions, dict_of_wigs['Topo_I_N3E_ss_F_by_FE rRNA'], linestyle='-', color='#333738', linewidth=1, alpha=0.8, label=f'TopoI Topo-Seq N3E ss F ({TU_sets_v["Topo_I_N3E_ss_F_by_FE rRNA"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0   
+        #plot1.plot(positions, dict_of_wigs['Topo_I_N3E_ss_R_by_FE rRNA'], linestyle='-', color='#b08642', linewidth=1, alpha=0.8, label=f'TopoI Topo-Seq N3E ss R ({TU_sets_v["Topo_I_N3E_ss_R_by_FE rRNA"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0  
+        
+    #plot1.set_ylim(0.75, 1.6) #(0.75, 1.6) for FE; (-0.6, 0.5) for ded FE
+    ticks=np.arange(-win_width,win_width+length+1,length).tolist()
+    plot1.set_xticks(ticks)
+    ticks_lables=ticks
+    ticks_lables[ticks.index(0)]='$TU_{start}$'
+    ticks_lables[ticks.index(length)]='$TU_{end}$'
+    ticks_lables1=ticks_lables[:ticks_lables.index('$TU_{end}$')+1]+np.arange(length,win_width+1,length).tolist()
+    plot1.set_xticklabels(ticks_lables1)
+    plot1.tick_params(axis='x', which='major', labelsize=15, pad=1)
+    plot1.set_xticks([0, length], minor='True')
+    #plot1.grid(axis='x', which='minor', color='black', linestyle='--', alpha=0.7, linewidth=1)
+    plot1.axvline(1, color='black', linestyle='--', alpha=0.7, linewidth=1)
+    plot1.axvline(length, color='black', linestyle='--', alpha=0.7, linewidth=1)
+    plot1.set_yticks([1], minor='True')
+    #plot1.set_xlim(-300, 200) #Start
+    #plot1.set_xlim(4800, 5300) #End
+    #plot1.grid(axis='y', which='minor', color='black', linestyle='--', alpha=0.7, linewidth=1)
+    plot1.axhline(0, color='black', linestyle='--', alpha=0.7, linewidth=1)
+    plot1.legend(fontsize=15, frameon=False)    
+    plot1.set_xlabel('Distance, bp', size=20)
+    plot1.set_ylabel(f'EcTopoI N3E', size=20)
+    plot1.set_xlim(-5000, 10000)
+    #plot1.set_title(f'{set_name} signal over {set_type}', size=20)     
+    plt.savefig(f'{output_path}\\{set_name}_over_{set_type}_TopoI_Seq_N3E_st_mock_st_no_Ara_{win_width}bp_nd_with_body_{length}_bp_binned_{bin_width}_bp_STD.png', dpi=400, figsize=(6, 6))  #Def size - 10, 6; Closer look - 3, 6
+    plt.savefig(f'{output_path}\\{set_name}_over_{set_type}_TopoI_Seq_N3E_st_mock_st_no_Ara_{win_width}bp_nd_with_body_{length}_bp_binned_{bin_width}_bp_STD.svg', dpi=400, figsize=(6, 6))  #Def size - 10, 6; Closer look - 3, 6    
+    #plt.show()
+    plt.close()     
+    
+    #Interpolation with splines.
+    dict_of_wigs_ip={}
+    for name, wig in dict_of_wigs.items():
+        dict_of_wigs_ip[name]=CubicSpline(positions, wig)
+    positions_ip=np.arange(-win_width, win_width+length, 1)
+    
+    #Plot interpolated N3E over genes.
+    plt.figure(figsize=(6, 6), dpi=100)
+    plot1=plt.subplot(111)    
+ 
+    ##Transcription units below.
+    if set_type=="transcripts":
+        #Standard order of colors: #757d8b, #333738, #b08642, #e4d1b4.
+        #TopoI Topo-Seq data.
+        Upper_conf_interval_F_all_TUs=np.array(dict_of_wigs['Topo_I_FE_ss_F All TUs'])+(np.array(dict_of_wigs['Topo_I_STD_ss_F All TUs'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_F All TUs"]))
+        Lower_conf_interval_F_all_TUs=np.array(dict_of_wigs['Topo_I_FE_ss_F All TUs'])-(np.array(dict_of_wigs['Topo_I_STD_ss_F All TUs'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_F All TUs"]))                
+        plot1.plot(positions_ip, dict_of_wigs_ip['Topo_I_FE_ss_F All TUs'](positions_ip), linestyle='-',  color='#333738', linewidth=2.5, alpha=0.7, label=f'All TUs F ({TU_sets_v["Topo_I_FE_ss_F All TUs"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0   
+        #plot1.plot(positions_ip,  CubicSpline(positions, Upper_conf_interval_F_all_TUs)(positions_ip),  linestyle='-', color='#333738', linewidth=0.2, alpha=0.3)
+        #plot1.plot(positions_ip,  CubicSpline(positions, Lower_conf_interval_F_all_TUs)(positions_ip),  linestyle='-', color='#333738', linewidth=0.2, alpha=0.3)
+        #plot1.fill_between(positions_ip, CubicSpline(positions, Lower_conf_interval_F_all_TUs)(positions_ip), CubicSpline(positions, Upper_conf_interval_F_all_TUs)(positions_ip), facecolor='#333738', alpha=0.2, interpolate=True) 
+        
+        Upper_conf_interval_R_all_TUs=np.array(dict_of_wigs['Topo_I_FE_ss_R All TUs'])+(np.array(dict_of_wigs['Topo_I_STD_ss_R All TUs'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_R All TUs"]))
+        Lower_conf_interval_R_all_TUs=np.array(dict_of_wigs['Topo_I_FE_ss_R All TUs'])-(np.array(dict_of_wigs['Topo_I_STD_ss_R All TUs'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_R All TUs"]))                
+        plot1.plot(positions_ip, dict_of_wigs_ip['Topo_I_FE_ss_R All TUs'](positions_ip), linestyle=':', color='#333738', linewidth=2.5, alpha=0.7, label=f'All TUs R ({TU_sets_v["Topo_I_FE_ss_R All TUs"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0        
+        #plot1.plot(positions_ip,  CubicSpline(positions, Upper_conf_interval_R_all_TUs)(positions_ip),  linestyle='-', color='#333738', linewidth=0.2, alpha=0.3)
+        #plot1.plot(positions_ip,  CubicSpline(positions, Lower_conf_interval_R_all_TUs)(positions_ip),  linestyle='-', color='#333738', linewidth=0.2, alpha=0.3)
+        #plot1.fill_between(positions_ip, CubicSpline(positions, Lower_conf_interval_R_all_TUs)(positions_ip), CubicSpline(positions, Upper_conf_interval_R_all_TUs)(positions_ip), facecolor='#333738', alpha=0.2, interpolate=True) 
+        
+        Upper_conf_interval_F_HETU=np.array(dict_of_wigs['Topo_I_FE_ss_F HETU'])+(np.array(dict_of_wigs['Topo_I_STD_ss_F HETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_F HETU"]))
+        Lower_conf_interval_F_HETU=np.array(dict_of_wigs['Topo_I_FE_ss_F HETU'])-(np.array(dict_of_wigs['Topo_I_STD_ss_F HETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_F HETU"]))                
+        plot1.plot(positions_ip, dict_of_wigs_ip['Topo_I_FE_ss_F HETU'](positions_ip),    linestyle='-',  color='#b08642', linewidth=2.5, alpha=0.7, label=f'HETU F ({TU_sets_v["Topo_I_FE_ss_F HETU"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0   
+        #plot1.plot(positions_ip,  CubicSpline(positions, Upper_conf_interval_F_HETU)(positions_ip),  linestyle='-', color='#b08642', linewidth=0.2, alpha=0.3)
+        #plot1.plot(positions_ip,  CubicSpline(positions, Lower_conf_interval_F_HETU)(positions_ip),  linestyle='-', color='#b08642', linewidth=0.2, alpha=0.3)
+        #plot1.fill_between(positions_ip, CubicSpline(positions, Lower_conf_interval_F_HETU)(positions_ip), CubicSpline(positions, Upper_conf_interval_F_HETU)(positions_ip), facecolor='#b08642', alpha=0.2, interpolate=True)         
+        
+        Upper_conf_interval_R_HETU=np.array(dict_of_wigs['Topo_I_FE_ss_R HETU'])+(np.array(dict_of_wigs['Topo_I_STD_ss_R HETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_R HETU"]))
+        Lower_conf_interval_R_HETU=np.array(dict_of_wigs['Topo_I_FE_ss_R HETU'])-(np.array(dict_of_wigs['Topo_I_STD_ss_R HETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_R HETU"]))                                
+        plot1.plot(positions_ip, dict_of_wigs_ip['Topo_I_FE_ss_R HETU'](positions_ip),    linestyle=':', color='#b08642', linewidth=2.5, alpha=0.7, label=f'HETU R ({TU_sets_v["Topo_I_FE_ss_R HETU"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0  
+        #plot1.plot(positions_ip,  CubicSpline(positions, Upper_conf_interval_R_HETU)(positions_ip),  linestyle='-', color='#b08642', linewidth=0.2, alpha=0.3)
+        #plot1.plot(positions_ip,  CubicSpline(positions, Lower_conf_interval_R_HETU)(positions_ip),  linestyle='-', color='#b08642', linewidth=0.2, alpha=0.3)
+        #plot1.fill_between(positions_ip, CubicSpline(positions, Lower_conf_interval_R_HETU)(positions_ip), CubicSpline(positions, Upper_conf_interval_R_HETU)(positions_ip), facecolor='#b08642', alpha=0.2, interpolate=True)         
+        
+        Upper_conf_interval_F_LETU=np.array(dict_of_wigs['Topo_I_FE_ss_F LETU'])+(np.array(dict_of_wigs['Topo_I_STD_ss_F LETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_F LETU"]))
+        Lower_conf_interval_F_LETU=np.array(dict_of_wigs['Topo_I_FE_ss_F LETU'])-(np.array(dict_of_wigs['Topo_I_STD_ss_F LETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_F LETU"]))                
+        plot1.plot(positions_ip, dict_of_wigs_ip['Topo_I_FE_ss_F LETU'](positions_ip),    linestyle='-',  color='#B6B8BD', linewidth=2.5, alpha=0.7, label=f'LETU F ({TU_sets_v["Topo_I_FE_ss_F LETU"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0   
+        #plot1.plot(positions_ip,  CubicSpline(positions, Upper_conf_interval_F_LETU)(positions_ip),  linestyle='-', color='#B6B8BD', linewidth=0.2, alpha=0.3)
+        #plot1.plot(positions_ip,  CubicSpline(positions, Lower_conf_interval_F_LETU)(positions_ip),  linestyle='-', color='#B6B8BD', linewidth=0.2, alpha=0.3)
+        #plot1.fill_between(positions_ip, CubicSpline(positions, Lower_conf_interval_F_LETU)(positions_ip), CubicSpline(positions, Upper_conf_interval_F_LETU)(positions_ip), facecolor='#B6B8BD', alpha=0.2, interpolate=True)         
+        
+        Upper_conf_interval_R_LETU=np.array(dict_of_wigs['Topo_I_FE_ss_R LETU'])+(np.array(dict_of_wigs['Topo_I_STD_ss_R LETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_R LETU"]))
+        Lower_conf_interval_R_LETU=np.array(dict_of_wigs['Topo_I_FE_ss_R LETU'])-(np.array(dict_of_wigs['Topo_I_STD_ss_R LETU'])/np.sqrt(TU_sets_v["Topo_I_FE_ss_R LETU"]))                                
+        plot1.plot(positions_ip, dict_of_wigs_ip['Topo_I_FE_ss_R LETU'](positions_ip),    linestyle=':', color='#B6B8BD', linewidth=2.5, alpha=0.7, label=f'LETU R ({TU_sets_v["Topo_I_FE_ss_R LETU"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0  
+        #plot1.plot(positions_ip,  CubicSpline(positions, Upper_conf_interval_R_LETU)(positions_ip),  linestyle='-', color='#B6B8BD', linewidth=0.2, alpha=0.3)
+        #plot1.plot(positions_ip,  CubicSpline(positions, Lower_conf_interval_R_LETU)(positions_ip),  linestyle='-', color='#B6B8BD', linewidth=0.2, alpha=0.3)
+        #plot1.fill_between(positions_ip, CubicSpline(positions, Lower_conf_interval_R_LETU)(positions_ip), CubicSpline(positions, Upper_conf_interval_R_LETU)(positions_ip), facecolor='#B6B8BD', alpha=0.2, interpolate=True)         
+        
+        #plot1.plot(positions_ip, dict_of_wigs_ip['Topo_I_N3E_ss_F_by_FE rRNA'](positions_ip), linestyle='-', color='#333738', linewidth=1, alpha=0.8, label=f'TopoI Topo-Seq N3E ss F ({TU_sets_v["Topo_I_N3E_ss_F_by_FE rRNA"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0   
+        #plot1.plot(positions_ip, dict_of_wigs_ip['Topo_I_N3E_ss_R_by_FE rRNA'](positions_ip), linestyle='-', color='#b08642', linewidth=1, alpha=0.8, label=f'TopoI Topo-Seq N3E ss R ({TU_sets_v["Topo_I_N3E_ss_R_by_FE rRNA"]})', zorder=6) #Def linewidth=1.5 #R123 -0; R123 -0; R123 -0  
+
+                         
+    #plot1.set_ylim(0.75, 1.6) #(0.75, 1.6) for FE; (-0.6, 0.5) for ded FE
+    ticks=np.arange(-win_width,win_width+length+1,length).tolist()
+    plot1.set_xticks(ticks)
+    ticks_lables=ticks
+    ticks_lables[ticks.index(0)]='$TU_{start}$'
+    ticks_lables[ticks.index(length)]='$TU_{end}$'
+    ticks_lables1=ticks_lables[:ticks_lables.index('$TU_{end}$')+1]+np.arange(length,win_width+1,length).tolist()
+    plot1.set_xticklabels(ticks_lables1)
+    plot1.tick_params(axis='x', which='major', labelsize=15, pad=1)
+    plot1.set_xticks([0, length], minor='True')
+    plot1.axhline(0, color='black', linestyle='--', alpha=0.5, linewidth=0.5, zorder=20)
+    #plot1.grid(axis='x', which='minor', color='black', linestyle='--', alpha=0.7, linewidth=1)  
+    plot1.axvline(0, color='black', linestyle='--', alpha=0.5, linewidth=0.5, zorder=21)
+    plot1.axvline(length, color='black', linestyle='--', alpha=0.5, linewidth=0.5, zorder=22)    
+    #plot1.set_yticks([1], minor='True')
+    plot1.tick_params(axis='y', which='major', labelsize=20, pad=2)
+    #plot1.grid(axis='y', which='minor', color='grey', linestyle='--', alpha=0.7, linewidth=1)   
+    #plot1.xaxis.tick_top()
+    #plot1.spines["right"].set_visible(False)
+    #plot1.spines["bottom"].set_visible(False)
+    #plot1.spines["left"].set_linewidth(2)
+    #plot1.spines["top"].set_linewidth(2)
+    plot1.legend(fontsize=11, frameon=False, markerscale=5, handlelength=1)    
+    #plot1.set_xlabel('Distance, bp', size=20)
+    #plot1.set_ylabel(f'{set_name} fold enrichment', size=20)
+    plot1.set_ylabel('EcTopoI N3E', size=25, labelpad=11)
+    plot1.set_xlabel('Distance, bp', size=25)  
+    #plot1.set_title(f'{set_name} signal over {set_type}', size=20)  
+    plot1.set_xlim(-5000, 10000)
+    plot1.set_ylim(-0.06, 0.05)
+    plt.tight_layout()
+    plt.savefig(f'{output_path}\\{set_name}_over_{set_type}_TopoI_Seq_N3E_st_mock_st_no_Ara_{win_width}bp_nd_with_body_{length}bp_binned_{bin_width}_bp_interpolated.png', dpi=400, figsize=(6, 6))
+    plt.savefig(f'{output_path}\\{set_name}_over_{set_type}_TopoI_Seq_N3E_st_mock_st_no_Ara_{win_width}bp_nd_with_body_{length}bp_binned_{bin_width}_bp_interpolated.svg', dpi=400, figsize=(6, 6))
+    #plt.show()
+    plt.close()    
+       
+    return
+
+
+#TopoI Topo-Seq.
+#plot_N3E_raw_signal(Wig_drip_data_in_dict_transcripts_2, Sm_window, Bin_width, Out_path, Signal_name, 'transcripts')
+plot_N3E_binned_signal(Fig5_toposeq_data_binned_in_dict_transcripts, Out_path, Signal_name, 'transcripts')
+

@@ -21,6 +21,7 @@ import numpy as np
 import random
 from Bio import SeqIO
 from scipy import stats
+from scipy.interpolate import CubicSpline
 
 
 #Path to the directory with input files.
@@ -70,7 +71,7 @@ Type_of_annot_10='broadPeak'
 Genes_set_name_10='LATU_no_dps'  
 
 #Path to the file with regions to be omitted (e.g. deletions).
-Deletions_inpath='C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\TopA_ChIP-Seq\EcTopoI_G116S_M320V_Topo-Seq\Scripts_TopoI_Topo-seq\Additional_genome_features\\Deletions_w3110_G_Mu_SGS.broadPeak'
+Deletions_inpath='C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\TopA_ChIP-Seq\EcTopoI_G116S_M320V_Topo-Seq\Scripts_TopoI_Topo-seq\TopoI_Topo-Seq\Additional_genome_features\\Deletions_w3110_G_Mu_SGS.broadPeak'
 #Width of US, DS regions.
 Win_width=15000
 #Length of GB.
@@ -88,9 +89,6 @@ Dict_of_wigs_ss_path_2={'TopoI_Ara_N3E_subtr_mock_subtr_no_Ara' :     {'F' : PWD
                      }
 Dict_of_wigs_path_2={'TopoI_no_CTD_no_Rif_FE' :  "C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\E_coli_ChIP-Seqs\All_tracks\Sutormin_TopA_ChIP_CTD_minus_Rif_minus_FE_av_346.wig"
                      }
-
-
-
 Dict_of_wigs_path_3={'TopoI_Ara_FE_sm' :              {'F' : PWD + 'WIG_NE_strand_specific_masked_FE_smoothed_av\TopoI_Ara_F_N3E_FE_av_123.wig',    'R' : PWD + 'WIG_NE_strand_specific_masked_FE_smoothed_av\TopoI_Ara_R_N3E_FE_av_123.wig'},
                      'TopoI_no_Ara_FE_sm' :           {'F' : PWD + 'WIG_NE_strand_specific_masked_FE_smoothed_av\TopoI_no_Ara_F_N3E_FE_av_123.wig', 'R' : PWD + 'WIG_NE_strand_specific_masked_FE_smoothed_av\TopoI_no_Ara_R_N3E_FE_av_123.wig'},
                      'TopoI_Ara_FE_sm_FE_no_Ara' :    {'F' : PWD + 'WIG_NE_strand_specific_masked_FE_smoothed_av_FE_no_Ara\TopoI_Ara_F_N3E_FE_av_123_div_by_TopoI_no_Ara_F_N3E_FE_av_123.wig', 'R' : PWD + 'WIG_NE_strand_specific_masked_FE_smoothed_av_FE_no_Ara\TopoI_Ara_R_N3E_FE_av_123_div_by_TopoI_no_Ara_R_N3E_FE_av_123.wig'},
@@ -107,7 +105,7 @@ def Dir_check_create(some_path):
     return
 
 #Path to the output directory.
-Out_path='C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\TopA_ChIP-Seq\EcTopoI_G116S_M320V_Topo-Seq\Metagene_analysis\Transcripts_strand_specific_binned_stat\\'
+Out_path='C:\\Users\sutor\OneDrive\ThinkPad_working\Sutor\Science\TopoI-ChIP-Seq\TopA_ChIP-Seq\EcTopoI_G116S_M320V_Topo-Seq\Metagene_analysis\Transcripts_strand_specific_binned_stat_for_Fig_5\\'
 
 #Output path.
 def create_out_dirs(out_path, genes_set_name):
@@ -124,11 +122,11 @@ def create_out_dirs(out_path, genes_set_name):
 #create_out_dirs(Out_path, Genes_set_name_4)
 #create_out_dirs(Out_path, Genes_set_name_2)
 create_out_dirs(Out_path, Genes_set_name_5)
-create_out_dirs(Out_path, Genes_set_name_6)
+#create_out_dirs(Out_path, Genes_set_name_6)
 create_out_dirs(Out_path, Genes_set_name_7)
 create_out_dirs(Out_path, Genes_set_name_8)
 create_out_dirs(Out_path, Genes_set_name_9)
-create_out_dirs(Out_path, Genes_set_name_10)
+#create_out_dirs(Out_path, Genes_set_name_10)
 
 
 #######
@@ -603,14 +601,27 @@ def genes_and_FE_ss(gene_annotation, genes_set_name, FE_track_pair, FE_track_pai
     
     positions_bn=np.arange(-win_width+(bin_width/2), win_width+length-(bin_width/2)+1, bin_width)
     
-    plot1.plot(positions_bn,  gene_F_binned_mean, linestyle='-', color='#B6B8BD', linewidth=2.5, alpha=1, label='Coding strand') 
-    plot1.plot(positions_bn,  Upper_conf_interval_F,  linestyle='-', color='#B6B8BD', linewidth=0.8, alpha=0.6)
-    plot1.plot(positions_bn,  Lower_conf_interval_F,  linestyle='-', color='#B6B8BD', linewidth=0.8, alpha=0.6)
-    plot1.fill_between(positions_bn, Lower_conf_interval_F, Upper_conf_interval_F, facecolor='#43c287', alpha=0.4, interpolate=True)       
-    plot1.plot(positions_bn,  gene_R_binned_mean, linestyle='-', color='#333738', linewidth=2.5, alpha=1, label='Template strand')
-    plot1.plot(positions_bn,  Upper_conf_interval_R,  linestyle='-', color='#333738', linewidth=0.8, alpha=0.6)   
-    plot1.plot(positions_bn,  Lower_conf_interval_R,  linestyle='-', color='#333738', linewidth=0.8, alpha=0.6)
-    plot1.fill_between(positions_bn, Lower_conf_interval_R, Upper_conf_interval_R, facecolor='#7ce0ff', alpha=0.4, interpolate=True) 
+    #plot1.plot(positions_bn,  gene_F_binned_mean, linestyle='-', color='#B6B8BD', linewidth=2.5, alpha=1, label='Coding strand') 
+    #plot1.plot(positions_bn,  Upper_conf_interval_F,  linestyle='-', color='#B6B8BD', linewidth=0.8, alpha=0.6)
+    #plot1.plot(positions_bn,  Lower_conf_interval_F,  linestyle='-', color='#B6B8BD', linewidth=0.8, alpha=0.6)
+    #plot1.fill_between(positions_bn, Lower_conf_interval_F, Upper_conf_interval_F, facecolor='#43c287', alpha=0.4, interpolate=True) 
+    #Make interpolation with splines.
+    cs_F=CubicSpline(positions_bn, gene_F_binned_mean)
+    #regressionLineOrder=20
+    #regressionLine_F=np.polyfit(positions_bn, gene_F_binned_mean, regressionLineOrder)
+    #p_F=np.poly1d(regressionLine_F)    
+    x_range=np.arange(np.min(positions_bn), np.max(positions_bn), 20)
+    plot1.plot(x_range, cs_F(x_range), linestyle='--', color='#B6B8BD', linewidth=2, alpha=1, label='Cubic Spline F')
+    
+    #plot1.plot(positions_bn,  gene_R_binned_mean, linestyle='-', color='#333738', linewidth=2.5, alpha=1, label='Template strand')
+    #plot1.plot(positions_bn,  Upper_conf_interval_R,  linestyle='-', color='#333738', linewidth=0.8, alpha=0.6)   
+    #plot1.plot(positions_bn,  Lower_conf_interval_R,  linestyle='-', color='#333738', linewidth=0.8, alpha=0.6)
+    #plot1.fill_between(positions_bn, Lower_conf_interval_R, Upper_conf_interval_R, facecolor='#7ce0ff', alpha=0.4, interpolate=True) 
+    #Make interpolation with splines.
+    cs_R=CubicSpline(positions_bn, gene_R_binned_mean)
+    #regressionLine_R=np.polyfit(positions_bn, gene_R_binned_mean, regressionLineOrder)
+    #p_R=np.poly1d(regressionLine_R)    
+    plot1.plot(x_range, cs_R(x_range), linestyle='--', color='#333738', linewidth=2, alpha=1, label='Cubic Spline R')    
     
     #plot1.set_ylim(-0.6, 0.5) #(0.75, 1.6) for FE; (-0.6, 0.5) for ded FE
     ticks=np.arange(-win_width,win_width+length+1,length).tolist()
@@ -627,7 +638,8 @@ def genes_and_FE_ss(gene_annotation, genes_set_name, FE_track_pair, FE_track_pai
     plot1.axvline(length, color='black', linestyle='--', alpha=0.5, linewidth=0.5, zorder=22)       
     plot1.legend(fontsize=12, frameon=False)    
     plot1.set_xlabel('Distance, bp', size=20)
-    plot1.set_ylabel('TopoI N3E', size=20)    
+    plot1.set_ylabel('TopoI N3E', size=20)  
+    plot1.set_xlim(-5000, 10000)
     plt.savefig(f'{out_path}\Figures\Plots\\{genes_set_name}\\{FE_track_pair_name}_over_{genes_set_name}_{win_width}bp_bin_width_{bin_width}bp.png', dpi=400, figsize=(10, 6))   
     plt.close()      
     
@@ -1154,8 +1166,8 @@ def Wrapper_signal_over_TUs(dict_of_wigs_ss_path, dict_of_wigs_path, path_to_ann
     return
 
 Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_5,  Type_of_annot_5,  Genes_set_name_5,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
-Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_6,  Type_of_annot_6,  Genes_set_name_6,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
+#Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_6,  Type_of_annot_6,  Genes_set_name_6,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
 Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_7,  Type_of_annot_7,  Genes_set_name_7,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
 Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_8,  Type_of_annot_8,  Genes_set_name_8,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
 Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_9,  Type_of_annot_9,  Genes_set_name_9,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
-Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_10, Type_of_annot_10, Genes_set_name_10, Deletions_inpath, Win_width, Length, Bin_width, Out_path)
+#Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_10, Type_of_annot_10, Genes_set_name_10, Deletions_inpath, Win_width, Length, Bin_width, Out_path)
