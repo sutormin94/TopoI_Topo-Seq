@@ -1165,9 +1165,9 @@ def Wrapper_signal_over_TUs(dict_of_wigs_ss_path, dict_of_wigs_path, path_to_ann
     
     return
 
-Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_5,  Type_of_annot_5,  Genes_set_name_5,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
+#Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_5,  Type_of_annot_5,  Genes_set_name_5,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
 #Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_6,  Type_of_annot_6,  Genes_set_name_6,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
-Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_7,  Type_of_annot_7,  Genes_set_name_7,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
+#Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_7,  Type_of_annot_7,  Genes_set_name_7,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
 Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_8,  Type_of_annot_8,  Genes_set_name_8,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
-Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_9,  Type_of_annot_9,  Genes_set_name_9,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
+#Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_9,  Type_of_annot_9,  Genes_set_name_9,  Deletions_inpath, Win_width, Length, Bin_width, Out_path)
 #Wrapper_signal_over_TUs(Dict_of_wigs_ss_path_2, Dict_of_wigs_path_2, Path_to_annotation_10, Type_of_annot_10, Genes_set_name_10, Deletions_inpath, Win_width, Length, Bin_width, Out_path)
