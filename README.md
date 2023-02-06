@@ -1,21 +1,19 @@
-# Gyrase_Topo-seq
-Exploring gyrase cleavage sites across *E. coli W3110* genome
+# TopoI_Topo-seq
+Exploring TopoI cleavage sites across *E. coli W3110* genome
 
-DNA-gyrase is a type II topoisomerase that introduces negative superhelicity into topologically closed DNA molecules. It operates with two DNA segments - so called G and T. 
-During catalysis the enzyme introduces temporal double-stranded break into G-segment, transfers T-segment through it and religates the gap. 
-5'-ends of the DNA break are stabilized by formation of an intermediate covalent complex between DNA and gyrase.
-Topo-Seq is a ChIP-Seq-like approach that exploits formation of these intermediates to map the gyrase cleavage sites (GCSs) with a single-base precision.
+TopoI is a type I topoisomerase which relaxes negative supercoiling in DNA molecules by introducing a transient single-strand break. 
+5'-end of the DNA break is stabilized by formation of an intermediate covalent complex between DNA and TopoI.
+Topo-Seq is a ChIP-Seq-like approach that exploits formation of these intermediates to map the TopoI cleavage sites with a single-base precision.
+We transiently expressed a TopoI G116S M320V double mutant in *E. coli* cells to map TopoI cleavage sites. This mutant is prone to cleave DNA but
+is unable to seal the break, thus forming stable TopoI-DNA covalent complexes.
 
-This repository contains a set of bash, python and R scripts which were used for Topo-Seq data analysis and visualization. 
+This repository contains a set of bash and python scripts which were used for Topo-Seq data analysis and visualization. 
 Raw sequencing data and some processed files can be retrieved from GEO datasets with accession GSE182473.
 
 If you find this code useful and would like to use it in your own research, please, cite:
 Sutormin D, Galivondzhyan A, Musharova O, Travin D, Rusanova A, Obraztsova K, Borukhov S, Severinov K. Interaction between transcribing RNA polymerase and topoisomerase I prevents R-loop formation in E. coli. Nat Commun. 2022 Aug 4;13(1):4524. doi: 10.1038/s41467-022-32106-5. PMID: 35927234; PMCID: PMC9352719.
 
-
-# Main pipeline
-
-![alt text](https://github.com/sutormin94/Gyrase_Topo-seq/blob/master/Pipeline_overview/Main_pipeline.png)
+######################
 
 ## Raw_reads_processing.sh
 
