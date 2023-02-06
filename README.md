@@ -7,7 +7,10 @@ During catalysis the enzyme introduces temporal double-stranded break into G-seg
 Topo-Seq is a ChIP-Seq-like approach that exploits formation of these intermediates to map the gyrase cleavage sites (GCSs) with a single-base precision.
 
 This repository contains a set of bash, python and R scripts which were used for Topo-Seq data analysis and visualization. 
-Raw sequencing data and some processed files (coverage depth WIG, N3E WIG, GCSs lists) can be retrieved from GEO datasets with accession GSE117186.
+Raw sequencing data and some processed files can be retrieved from GEO datasets with accession GSE182473.
+
+If you find this code useful and would like to use it in your own research, please, cite:
+Sutormin D, Galivondzhyan A, Musharova O, Travin D, Rusanova A, Obraztsova K, Borukhov S, Severinov K. Interaction between transcribing RNA polymerase and topoisomerase I prevents R-loop formation in E. coli. Nat Commun. 2022 Aug 4;13(1):4524. doi: 10.1038/s41467-022-32106-5. PMID: 35927234; PMCID: PMC9352719.
 
 
 # Main pipeline
