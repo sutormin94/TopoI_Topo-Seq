@@ -1,5 +1,6 @@
 # TopoI_Topo-seq
-Exploring TopoI cleavage sites across *E. coli W3110* genome
+
+Exploring TopoI cleavage sites across *E. coli* W3110 genome
 
 TopoI is a type I topoisomerase which relaxes negative supercoiling in DNA molecules by introducing a transient single-strand break. 
 5'-end of the DNA break is stabilized by formation of an intermediate covalent complex between DNA and TopoI.
